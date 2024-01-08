@@ -32,8 +32,10 @@ export class ProjectsController {
     return this.projectsService.assignProjectToUser(projectId, userId);
   }
 
-//   @Get(':projectId/assignedUsers')
-//   async getAssignedUsers(@Param('projectId') projectId: number): Promise<User[]> {
-//     return this.projectsService.getAssignedUsers(projectId);
-//   }
+  @Get(':projectId/assignedUsers')
+  async getAssignedUsers(
+    @Param('projectId') projectId: number,
+  ): Promise<User[]> {
+    return this.projectsService.getAssignedUsers(projectId);
+  }
 }

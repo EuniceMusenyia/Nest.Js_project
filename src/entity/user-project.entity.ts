@@ -1,6 +1,6 @@
 import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './users.entity';
-import { Project } from './projects.entity'; 
+import { Project } from './projects.entity';
 
 @Entity('user_projects', { schema: 'public' })
 export class UserProject {

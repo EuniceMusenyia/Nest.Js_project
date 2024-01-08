@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Project } from 'src/entity/projects.entity';
 import { UserDetails } from 'src/entity/user-details.entity';
 import { User } from 'src/entity/users.entity';
 import { Repository } from 'typeorm';
@@ -15,7 +16,7 @@ export class UsersService {
   ) {}
 
   async createUser(user: User): Promise<User> {
-    console.log(user);
+    // console.log(user);
     // user.userId = user.id;
 
     const createdUser = await this.userRepository.save(user);
@@ -43,21 +44,6 @@ export class UsersService {
     return user;
   }
 
-  // eslint-disable-next-line prettier/prettier
-  async getUsersProjects(userId: number): Promise<{ firstName: string; lastName: string }[]> {
-    const users = await this.userRepository
-      .createQueryBuilder('user')
-      .select(['user.firstName', 'user.lastName'])
-      .leftJoin('user.userDetails', 'userDetails')
-      .where('user.userId = :userId', { userId })
-      .andWhere('userDetails.projectCount >= :projectCount', {
-        projectCount: 3,
-      })
-      .getMany();
-
-    return users;
-  }
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async searchUser(searchTerm: string): Promise<User[]> {
     const users = await this.userRepository
@@ -73,5 +59,21 @@ export class UsersService {
 
   async getAllUsers(): Promise<User[]> {
     return this.userRepository.find();
+  }
+
+  async getUserProjects(userId: number): Promise<Project[]> {
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.userId = :userId', { userId })
+      .leftJoinAndSelect('user.projects', 'projects')
+      .getOne();
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    console.log(user);
+
+    return user.projects || [];
   }
 }

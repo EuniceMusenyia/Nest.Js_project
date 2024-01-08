@@ -4,7 +4,7 @@ import { Project } from 'src/entity/projects.entity';
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { CreateProjectDto } from './create-project.dto';
 import { User } from 'src/entity/users.entity';
-import { UserDetails } from 'src/entity/user-details.entity';
+// import { UserProject } from 'src/entity/user-project.entity';
 
 @Injectable()
 export class ProjectsService {
@@ -46,7 +46,7 @@ export class ProjectsService {
     try {
       const project = await this.projectsRepository.findOne({
         where: { projectId: projectId },
-        relations: ['assignedUser'],
+        relations: ['assignedUsers'],
       });
 
       if (!project) {
@@ -55,19 +55,16 @@ export class ProjectsService {
 
       const user = await this.userRepository.findOne({
         where: { userId: userId },
-        relations: ['userDetails', 'assignedProjects'],
+        // relations: ['userDetails', 'projects'],
       });
 
       if (!user) {
         throw new NotFoundException('User not found');
       }
 
-      project.assignedUser = user as User;
-      (user.userDetails as UserDetails).totalProjects =
-        ((user.userDetails as UserDetails).totalProjects || 0) + 1;
+      project.assignedUsers = [...project.assignedUsers, user];
 
       await this.projectsRepository.save(project);
-      await this.userRepository.save(user.userDetails);
 
       return project;
     } catch (error) {
@@ -78,23 +75,26 @@ export class ProjectsService {
     }
   }
 
-//   async getAssignedUsers(projectId: number): Promise<User[]> {
-//     try {
-//       const project = await this.projectsRepository.findOne({
-//         where: { projectId: projectId },
-//         relations: ['assignedUsers'],
-//       });
-  
-//       if (!project) {
-//         throw new NotFoundException('Project not found');
-//       }
-  
-//       return project.assignedUsers || []; // Assuming assignedUsers is an array of User entities
-//     } catch (error) {
-//       if (error instanceof EntityNotFoundError) {
-//         throw new NotFoundException('Project not found');
-//       }
-//       throw error;
-//     }
-//   }
+  async getAssignedUsers(projectId: number): Promise<User[]> {
+    try {
+      const project = await this.projectsRepository.findOne({
+        where: { projectId },
+        relations: ['assignedUsers'],
+      });
+
+      if (!project) {
+        throw new NotFoundException('Project not found');
+      }
+
+      return project.assignedUsers || [];
+    } catch (error) {
+      console.error('Error fetching assigned users:', error);
+
+      if (error instanceof EntityNotFoundError) {
+        throw new NotFoundException('Project not found');
+      }
+      throw error;
+    }
+  }
+
 }

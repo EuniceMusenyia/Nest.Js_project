@@ -3,6 +3,8 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -10,7 +12,6 @@ import {
 } from 'typeorm';
 import { UserDetails } from './user-details.entity';
 import { Project } from './projects.entity';
-import { UserProject } from './user-project.entity';
 
 @Entity('users', { schema: 'public' })
 export class User {
@@ -30,18 +31,24 @@ export class User {
   @JoinColumn({name: 'id', referencedColumnName: 'userId'}) 
   userDetails: UserDetails;
 
-//   @OneToMany(() => Project, (project) => project.assignedUser) 
-//   assignedProjects: Project[];
+  @OneToMany(() => Project, (project) => project.assignedUser) 
+  assignedProjects: Project[];
+
+@ManyToOne(() => Project, (project) => project.assignedUsers, { nullable: true })
+@JoinColumn({ name: 'user_id', referencedColumnName: '' })
+assignedProject: Project;
+
+
+@ManyToMany(() => Project, project => project.users)
+@JoinTable()
+projects: Project[];
 
 // @OneToMany(() => Project, (project) => project.assignedUser) 
 // assignedProjects: Project[];
 
-// @ManyToOne(() => Project, (project) => project.assignedUsers, { nullable: true })
-// @JoinColumn({ name: 'user_id', referencedColumnName: '' })
-// assignedProject: Project;
 
+// @OneToMany(() => UserProject, (userProject) => userProject.user)
+// assignedProjects: UserProject[];
 
-@OneToMany(() => UserProject, (userProject) => userProject.user)
-assignedProjects: UserProject[];
 
 }

@@ -11,8 +11,8 @@ import { User } from './entity/users.entity';
 import { UserDetails } from './entity/user-details.entity';
 import { ProjectsModule } from './projects/projects.module';
 import { Project } from './entity/projects.entity';
-import { UserProject } from './entity/user-project.entity';
-import { UserProjectModule } from './user-projects/user-project.module';
+// import { UserProject } from './entity/user-project.entity';
+// import { UserProjectModule } from './user-projects/user-project.module';
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { UserProjectModule } from './user-projects/user-project.module';
     User,
     UserDetails,
     ProjectsModule,
-    UserProjectModule,
+    // UserProjectModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -31,7 +31,7 @@ import { UserProjectModule } from './user-projects/user-project.module';
       password: 'senyia',
       database: 'workbaydb',
       synchronize: true,
-      entities: [Job, JobDetails, User, UserDetails, Project, UserProject],
+      entities: [Job, JobDetails, User, UserDetails, Project],
     }),
   ],
   controllers: [AppController],

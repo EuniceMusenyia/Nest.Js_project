@@ -2,12 +2,13 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from './users.entity';
-import { UserProject } from './user-project.entity';
 
 @Entity('projects', { schema: 'public' })
 export class Project {
@@ -35,14 +36,19 @@ export class Project {
   @JoinColumn({ name: 'user_id', referencedColumnName: 'userId' })
   assignedUser: User;
 
-// @ManyToOne(() => User, (user) => user.assignedProjects, { nullable: true })
-// @JoinColumn({ name: 'user_id', referencedColumnName: 'userId' })
-// assignedUser: User;
+  @ManyToMany(() => User, (user) => user.projects)
+  @JoinTable()
+  users: User[];
 
-// @OneToMany(() => User, (user) => user.assignedProject)
-// assignedUsers: User[];
+  @OneToMany(() => User, (user) => user.assignedProject)
+  assignedUsers: User[];
 
-@OneToMany(() => UserProject, (userProject) => userProject.project)
-assignedUsers: UserProject[];
+  // @ManyToOne(() => User, (user) => user.assignedProjects, { nullable: true })
+  // @JoinColumn({ name: 'user_id', referencedColumnName: 'userId' })
+  // assignedUser: User;
 
+  // @OneToMany(() => UserProject, (userProject) => userProject.project)
+  // assignedUsers: UserProject[];
+
+  //
 }

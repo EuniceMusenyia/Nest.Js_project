@@ -26,7 +26,11 @@ export class UserDetails {
   @Column({ name: 'project_count', type: 'integer', default: 0 })
   projectCount: number;
 
-  @OneToOne(() => User, (user) => user.userDetails)
+  // @OneToOne(() => User, (user) => user.userDetails)
+  // @JoinColumn({ name: 'user_id', referencedColumnName: 'userId' })
+  // user: User;
+
+  @OneToOne(() => User, (user) => user.userDetails, { cascade: true })
   @JoinColumn({ name: 'user_id', referencedColumnName: 'userId' })
   user: User;
 }
