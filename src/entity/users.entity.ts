@@ -3,9 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  JoinTable,
   ManyToMany,
-  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -27,28 +25,44 @@ export class User {
   @Column({ name: 'age', type: 'integer' })
   age: number; 
 
-  @OneToOne(() => UserDetails, {createForeignKeyConstraints:false, eager: false, nullable:false})   
+
+  @OneToOne(() => UserDetails, {createForeignKeyConstraints:false, eager: true,nullable:false})   
   @JoinColumn({name: 'id', referencedColumnName: 'userId'}) 
   userDetails: UserDetails;
+  totalProjects: any;
 
-  @OneToMany(() => Project, (project) => project.assignedUser) 
-  assignedProjects: Project[];
+  @OneToMany(() => Project,(project) => project.assignedUser) 
+assignedProjects: Project[];
+    userProjects: any;
 
-@ManyToOne(() => Project, (project) => project.assignedUsers, { nullable: true })
-@JoinColumn({ name: 'user_id', referencedColumnName: '' })
-assignedProject: Project;
-
-
-@ManyToMany(() => Project, project => project.users)
-@JoinTable()
-projects: Project[];
-
-// @OneToMany(() => Project, (project) => project.assignedUser) 
+//     @ManyToMany(() => Project, (project) => project.assignedUsers)
 // assignedProjects: Project[];
+
+  // @OneToMany(() => Project, (project) => project.assignedUser) 
+  // assignedProjects: Project[];
+
+// @ManyToOne(() => Project, (project) => project.assignedUsers, { nullable: true })
+// @JoinColumn({ name: 'user_id', referencedColumnName: '' })
+// assignedProject: Project;
+
+
+// @ManyToMany(() => Project, project => project.users)
+// @JoinTable({
+//   name: 'project_user',
+//   joinColumn: { name: 'user_id', referencedColumnName: 'userId' },
+//   inverseJoinColumn: { name: 'project_id', referencedColumnName: 'projectId' },
+// })
+// projects: Project[];
+//   totalProjects: number;
+
+
 
 
 // @OneToMany(() => UserProject, (userProject) => userProject.user)
-// assignedProjects: UserProject[];
+// userProjects: UserProject[];
+
+// @OneToMany(() => UserProject, userProject => userProject.user)
+// userProjects: UserProject[];
 
 
 }

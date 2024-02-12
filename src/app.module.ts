@@ -11,6 +11,7 @@ import { User } from './entity/users.entity';
 import { UserDetails } from './entity/user-details.entity';
 import { ProjectsModule } from './projects/projects.module';
 import { Project } from './entity/projects.entity';
+import { UserProject } from './entity/user-project.entity';
 // import { UserProject } from './entity/user-project.entity';
 // import { UserProjectModule } from './user-projects/user-project.module';
 
@@ -31,7 +32,7 @@ import { Project } from './entity/projects.entity';
       password: 'senyia',
       database: 'workbaydb',
       synchronize: true,
-      entities: [Job, JobDetails, User, UserDetails, Project],
+      entities: [Job, JobDetails, User, UserDetails, Project, UserProject],
     }),
   ],
   controllers: [AppController],

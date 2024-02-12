@@ -1,9 +1,11 @@
+/* eslint-disable prettier/prettier */
 import { Controller, Get, Param, Post, Body } from '@nestjs/common';
 import { Project } from 'src/entity/projects.entity';
 import { ProjectsService } from './projects.service';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { CreateProjectDto } from './create-project.dto';
 import { User } from 'src/entity/users.entity';
+import { ProjectWithUsers } from 'src/interface/projectwithusers.interface';
 
 @Controller('projects')
 export class ProjectsController {
@@ -35,7 +37,12 @@ export class ProjectsController {
   @Get(':projectId/assignedUsers')
   async getAssignedUsers(
     @Param('projectId') projectId: number,
-  ): Promise<User[]> {
+  ) {
     return this.projectsService.getAssignedUsers(projectId);
+  }
+
+  @Get('projects-with-users')
+  async getProjectsWithUsers(): Promise<ProjectWithUsers[]> {
+    return this.projectsService.getProjectsWithUsers();
   }
 }

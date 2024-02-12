@@ -1,17 +1,13 @@
-import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from './users.entity';
-import { Project } from './projects.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('user_projects', { schema: 'public' })
+@Entity('user-projects', { schema: 'public' })
 export class UserProject {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
 
-  @ManyToOne(() => User, (user) => user.assignedProjects)
-  @JoinColumn({ name: 'user_id' })
-  user: User;
+  @Column({ name: 'project_id' })
+  projectId: number;
 
-  @ManyToOne(() => Project, (project) => project.assignedUsers)
-  @JoinColumn({ name: 'project_id' })
-  project: Project;
+  @Column({ name: 'user_id', type: 'integer' })
+  userId: number;
 }

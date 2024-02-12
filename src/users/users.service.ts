@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Project } from 'src/entity/projects.entity';
 import { UserDetails } from 'src/entity/user-details.entity';
+import { UserProject } from 'src/entity/user-project.entity';
 import { User } from 'src/entity/users.entity';
 import { Repository } from 'typeorm';
 
@@ -13,6 +14,9 @@ export class UsersService {
 
     @InjectRepository(UserDetails)
     private readonly userDetailsRepository: Repository<UserDetails>,
+
+    @InjectRepository(UserProject)
+    private readonly userProjectRepository: Repository<UserProject>,
   ) {}
 
   async createUser(user: User): Promise<User> {
@@ -62,18 +66,19 @@ export class UsersService {
   }
 
   async getUserProjects(userId: number): Promise<Project[]> {
-    const user = await this.userRepository
+    const project = await this.userProjectRepository
       .createQueryBuilder('user')
       .where('user.userId = :userId', { userId })
-      .leftJoinAndSelect('user.projects', 'projects')
-      .getOne();
+      .leftJoinAndSelect(
+        Project,
+        'project',
+        'project.projectId = user.projectId',
+      )
+      .getRawMany();
 
-    if (!user) {
-      throw new NotFoundException('User not found');
+    if (!project) {
+      throw new NotFoundException('No projects');
     }
-
-    console.log(user);
-
-    return user.projects || [];
+    return project || [];
   }
 }

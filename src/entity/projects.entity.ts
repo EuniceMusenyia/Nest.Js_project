@@ -31,17 +31,22 @@ export class Project {
     default: null,
   })
   careerCards: number[] | null;
+  static projectId: any;
 
   @ManyToOne(() => User, (user) => user.assignedProjects, { nullable: true })
   @JoinColumn({ name: 'user_id', referencedColumnName: 'userId' })
   assignedUser: User;
 
-  @ManyToMany(() => User, (user) => user.projects)
-  @JoinTable()
-  users: User[];
-
-  @OneToMany(() => User, (user) => user.assignedProject)
+  @ManyToMany(() => User, (user) => user.assignedProjects)
+  @JoinTable({ name: 'project_user' })
   assignedUsers: User[];
+
+  // @ManyToMany(() => User, (user) => user.projects)
+  // @JoinTable()
+  // users: User[];
+
+  // @OneToMany(() => User, (user) => user.assignedProject)
+  // assignedUsers: User[];
 
   // @ManyToOne(() => User, (user) => user.assignedProjects, { nullable: true })
   // @JoinColumn({ name: 'user_id', referencedColumnName: 'userId' })
